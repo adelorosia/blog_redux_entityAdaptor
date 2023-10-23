@@ -7,12 +7,14 @@ export interface IBlogState {
   article: IArticle[];
   status: "idle" | "loading" | "completed" | "failed";
   error: null | string;
+  blogId: string;
 }
 
 const initialState: IBlogState = {
   article: [],
   status: "idle",
   error: null,
+  blogId: "",
 };
 
 export const fetchBlogs = createAsyncThunk("/blog/fetchBlogs", async () => {
@@ -23,7 +25,11 @@ export const fetchBlogs = createAsyncThunk("/blog/fetchBlogs", async () => {
 const blogSlice = createSlice({
   name: "blog",
   initialState,
-  reducers: {},
+  reducers: {
+    setBlogId: (state, action) => {
+      state.blogId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBlogs.pending, (state) => {
@@ -41,5 +47,10 @@ const blogSlice = createSlice({
 });
 
 export const displayAllBlogs = (state: RootState) => state.blog.article;
+
+export const findBlogById = (state: RootState, blogId: string) =>
+  state.blog.article.find((blog) => blog._id === blogId);
+
+export const { setBlogId } = blogSlice.actions;
 
 export default blogSlice.reducer;
