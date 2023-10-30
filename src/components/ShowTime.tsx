@@ -9,7 +9,7 @@ const ShowTime = ({timeStamp}:IShowTimeProps) => {
     const oldTime=formatDistanceToNow(time)
     return (
         <div>
-            {oldTime} ago
+            {oldTime.toString()} ago
         </div>
     );
 }

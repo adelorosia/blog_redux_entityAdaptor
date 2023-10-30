@@ -39,6 +39,8 @@ const userSlice = createSlice({
   },
 });
 
+export const getAllAuthors = (state: RootState) => state.user.author;
+
 export const findUserById = (state: RootState, userId: string) =>
   state.user.author.find((user) => user._id === userId);
 

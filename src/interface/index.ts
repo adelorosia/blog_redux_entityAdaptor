@@ -5,7 +5,7 @@ export interface IArticle {
   title: string;
   content: string;
   imgUrl: string;
-  reaction: Record<string, number>;
+  reactions: Record<string, number>;
 }
 
 export interface IAuthor {
