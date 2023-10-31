@@ -28,34 +28,43 @@ const CreateBlogPage = () => {
     }));
   };
 
+  const canSave = [
+    formData.authorId,
+    formData.content,
+    formData.path,
+    formData.title,
+  ].every(Boolean);
+
   const handlerAddNewBlog = async () => {
-    try {
-      await dispatch(
-        addNewBlog({
-          _id: "",
-          userId: formData.authorId,
-          title: formData.title,
-          imgUrl: formData.path,
-          date: new Date().toISOString(),
-          content: formData.content,
-          reactions: {
-            thumbSup: 0,
-            hooray: 0,
-            heart: 0,
-            rocket: 0,
-            eyes: 0,
-          },
-        })
-      );
-      setFormData({
-        title:"",
-        content:"",
-        authorId:"",
-        path:""
-      })
-      navigate("/home")
-    } catch (error) {
-      console.error("data is not save in database", error);
+    if (canSave) {
+      try {
+        await dispatch(
+          addNewBlog({
+            _id: "",
+            userId: formData.authorId,
+            title: formData.title,
+            imgUrl: formData.path,
+            date: new Date().toISOString(),
+            content: formData.content,
+            reactions: {
+              thumbSup: 0,
+              hooray: 0,
+              heart: 0,
+              rocket: 0,
+              eyes: 0,
+            },
+          })
+        );
+        setFormData({
+          title: "",
+          content: "",
+          authorId: "",
+          path: "",
+        });
+        navigate("/home");
+      } catch (error) {
+        console.error("data is not save in database", error);
+      }
     }
   };
   return (

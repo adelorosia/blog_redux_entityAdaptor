@@ -8,12 +8,14 @@ interface IBlogState {
   status: "idle" | "loading" | "completed" | "failed";
   error: null | string;
   inputValueSearch: string;
+  blogId:string
 }
 const initialState: IBlogState = {
   articles: [],
   status: "idle",
   error: null,
   inputValueSearch: "",
+  blogId:""
 };
 
 export const fetchBlog = createAsyncThunk("blog/fetchBlog", async () => {
@@ -35,6 +37,9 @@ const blogSlice = createSlice({
   reducers: {
     setInputValueSearch: (state, action) => {
       state.inputValueSearch = action.payload;
+    },
+    setBlogId: (state, action) => {
+      state.blogId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -60,5 +65,5 @@ export const displayAllBlogs = (state: RootState) => state.blog.articles;
 export const displayBlogById = (state: RootState, blogId: string) =>
   state.blog.articles.find((article) => article._id === blogId);
 
-export const { setInputValueSearch } = blogSlice.actions;
+export const { setInputValueSearch,setBlogId } = blogSlice.actions;
 export default blogSlice.reducer;
