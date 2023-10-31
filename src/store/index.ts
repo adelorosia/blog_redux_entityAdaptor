@@ -1,19 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import blogReducer, { fetchBlogs } from "../reducer/BlogSlice";
-import userReducer, { fetchUsers } from "../reducer/UserSlice";
+import blogReducer, { fetchBlog } from "../reducer/BlogSlice"
+import userReducer, { fetchUser } from "../reducer/UserSlice"
 
-
-const store = configureStore({
-  reducer: {
-    blog: blogReducer,
-    user: userReducer,
-  },
-});
-
-store.dispatch(fetchBlogs())
-store.dispatch(fetchUsers())
-
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
-
-export default store;
+export const store=configureStore({
+  reducer:{
+    blog:blogReducer,
+    user:userReducer
+  }
+})
+store.dispatch(fetchBlog())
+store.dispatch(fetchUser())
+export type RootState=ReturnType<typeof store.getState>
+export type AppDispatch=typeof store.dispatch

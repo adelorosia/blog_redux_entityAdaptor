@@ -1,17 +1,12 @@
 import { formatDistanceToNow, parseISO } from "date-fns";
 
-interface IShowTimeProps{
-    timeStamp:string
+interface IShowTimeState {
+  timeStamp: string;
 }
-
-const ShowTime = ({timeStamp}:IShowTimeProps) => {
-    const time=parseISO(timeStamp)
-    const oldTime=formatDistanceToNow(time)
-    return (
-        <div>
-            {oldTime.toString()} ago
-        </div>
-    );
-}
+const ShowTime = ({ timeStamp }: IShowTimeState) => {
+  const oldTime = parseISO(timeStamp);
+  const newDate = formatDistanceToNow(oldTime);
+  return <div>{newDate}</div>;
+};
 
 export default ShowTime;

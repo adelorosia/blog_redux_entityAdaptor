@@ -3,19 +3,18 @@ import { IAuthor } from "../interface";
 import { getAllUsers } from "../services";
 import { RootState } from "../store";
 
-interface IAuthorState {
-  author: IAuthor[];
-  status: "idle" | "loading" | "completed" | "faied";
+interface IUserState {
+  authors: IAuthor[];
+  status: "idle" | "loading" | "completed" | "failed";
   error: null | string;
 }
-
-const initialState: IAuthorState = {
-  author: [],
+const initialState: IUserState = {
+  authors: [],
   status: "idle",
   error: null,
 };
 
-export const fetchUsers = createAsyncThunk("user/fetchUsers", async () => {
+export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   const response = await getAllUsers();
   return response.data;
 });
@@ -26,22 +25,22 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUsers.pending, (state) => {
-        state.status = "idle";
+      .addCase(fetchUser.pending, (state) => {
+        state.status = "loading";
       })
-      .addCase(fetchUsers.fulfilled, (state, action) => {
-        (state.status = "completed"), (state.author = action.payload);
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.status = "completed";
+        state.authors = action.payload;
       })
-      .addCase(fetchUsers.rejected, (state, action) => {
-        (state.status = "faied"),
-          (state.error = action.error.message || "an error accourred");
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "an error accourred";
       });
   },
 });
 
-export const getAllAuthors = (state: RootState) => state.user.author;
-
-export const findUserById = (state: RootState, userId: string) =>
-  state.user.author.find((user) => user._id === userId);
+export const displayAllUsers = (state: RootState) => state.user.authors;
+export const displayUserById = (state: RootState, userId: string) =>
+  state.user.authors.find((author) => author._id === userId);
 
 export default userSlice.reducer;

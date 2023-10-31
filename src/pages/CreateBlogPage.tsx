@@ -1,18 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getAllAuthors } from "../reducer/UserSlice";
-import React, { useState } from "react";
-import { AppDispatch } from "../store";
-import { addNewBlog } from "../reducer/BlogSlice";
 import { useNavigate } from "react-router-dom";
+import { displayAllUsers } from "../reducer/UserSlice";
+import React, { useState } from "react";
+import { addNewBlog } from "../reducer/BlogSlice";
+import { AppDispatch } from "../store";
 
 const CreateBlogPage = () => {
+  const navigate = useNavigate();
+  const authors = useSelector(displayAllUsers);
   const dispatch = useDispatch<AppDispatch>();
-  const users = useSelector(getAllAuthors);
-  const navigate=useNavigate()
   const [formData, setFormData] = useState({
     title: "",
     path: "",
-    userId: "",
+    authorId: "",
     content: "",
   });
 
@@ -28,46 +28,36 @@ const CreateBlogPage = () => {
     }));
   };
 
-  const canSave = [
-    formData.title,
-    formData.path,
-    formData.userId,
-    formData.content,
-  ].every(Boolean);
-
-  const handleSubmitForm = async () => {
+  const handlerAddNewBlog = async () => {
     try {
-      if (canSave) {
-        await dispatch(
-          addNewBlog({
-            _id: "",
-            date: new Date().toISOString(),
-            title: formData.title,
-            imgUrl: formData.path,
-            content: formData.content,
-            userId: formData.userId,
-            reactions: {
-              thumbSup: 0,
-              hooray: 0,
-              heart: 0,
-              rocket: 0,
-              eyes: 0,
-            },
-          })
-        );
-        setFormData({
-          userId:"",
-          title:"",
-          content:"",
-          path:""
+      await dispatch(
+        addNewBlog({
+          _id: "",
+          userId: formData.authorId,
+          title: formData.title,
+          imgUrl: formData.path,
+          date: new Date().toISOString(),
+          content: formData.content,
+          reactions: {
+            thumbSup: 0,
+            hooray: 0,
+            heart: 0,
+            rocket: 0,
+            eyes: 0,
+          },
         })
-        navigate("/home")
-      }
+      );
+      setFormData({
+        title:"",
+        content:"",
+        authorId:"",
+        path:""
+      })
+      navigate("/home")
     } catch (error) {
-      console.error("Data not save", error);
+      console.error("data is not save in database", error);
     }
   };
-
   return (
     <div className="flex min-h-screen justify-center items-center">
       <div className="container px-5 flex justify-center">
@@ -90,17 +80,17 @@ const CreateBlogPage = () => {
           />
           <select
             className="w-full rounded-lg py-2 outline-0 px-3  text-BACKGROUND"
-            value={formData.userId}
-            name="userId"
+            value={formData.authorId}
+            name="authorId"
             onChange={onFormChange}
           >
             <option value="">Authors</option>
 
-            {users.map((user,index) => (
+            {authors.map((author, index) => (
               <option
                 key={index}
-                value={user._id}
-              >{`${user.firstName} ${user.lastName}`}</option>
+                value={author._id}
+              >{`${author.firstName} ${author.lastName}`}</option>
             ))}
           </select>
           <textarea
@@ -116,11 +106,16 @@ const CreateBlogPage = () => {
           <div className="flex px-8 py-2 gap-8">
             <button
               className="bg-CYAN px-8 py-2 rounded-lg"
-              onClick={handleSubmitForm}
+              onClick={handlerAddNewBlog}
             >
               Add Article
             </button>
-            <button className="bg-ORANGE px-8 py-2 rounded-lg">Cancel</button>
+            <button
+              className="bg-ORANGE px-8 py-2 rounded-lg"
+              onClick={() => navigate("/home")}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>

@@ -1,33 +1,30 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IArticle } from "../interface";
-import { createBlog, getAllBlogs } from "../services";
+import { createBlogs, getAllBlogs } from "../services";
 import { RootState } from "../store";
 
-export interface IBlogState {
-  article: IArticle[];
+interface IBlogState {
+  articles: IArticle[];
   status: "idle" | "loading" | "completed" | "failed";
   error: null | string;
-  blogId: string;
-  inputSearchValue: string;
+  inputValueSearch: string;
 }
-
 const initialState: IBlogState = {
-  article: [],
+  articles: [],
   status: "idle",
   error: null,
-  blogId: "",
-  inputSearchValue: "",
+  inputValueSearch: "",
 };
 
-export const fetchBlogs = createAsyncThunk("/blog/fetchBlogs", async () => {
+export const fetchBlog = createAsyncThunk("blog/fetchBlog", async () => {
   const response = await getAllBlogs();
   return response.data;
 });
 
 export const addNewBlog = createAsyncThunk(
-  "/blog/addNewBlog",
+  "blog/addNewBlog",
   async (initialBlog: IArticle) => {
-    const response = await createBlog(initialBlog);
+    const response = await createBlogs(initialBlog);
     return response.data;
   }
 );
@@ -36,38 +33,32 @@ const blogSlice = createSlice({
   name: "blog",
   initialState,
   reducers: {
-    setBlogId: (state, action) => {
-      state.blogId = action.payload;
-    },
-    setInputSearchValue: (state, action) => {
-      state.inputSearchValue = action.payload;
+    setInputValueSearch: (state, action) => {
+      state.inputValueSearch = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchBlogs.pending, (state) => {
+      .addCase(fetchBlog.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchBlogs.fulfilled, (state, action) => {
+      .addCase(fetchBlog.fulfilled, (state, action) => {
         state.status = "completed";
-        state.article = action.payload;
+        state.articles = action.payload;
       })
-      .addCase(fetchBlogs.rejected, (state, action) => {
+      .addCase(fetchBlog.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message || "An error accourred";
+        state.error = action.error.message || "an error accourred";
       })
       .addCase(addNewBlog.fulfilled, (state, action) => {
-        state.status = "completed";
-        state.article.push(action.payload);
+        (state.status = "completed"), state.articles.push(action.payload);
       });
   },
 });
 
-export const displayAllBlogs = (state: RootState) => state.blog.article;
+export const displayAllBlogs = (state: RootState) => state.blog.articles;
+export const displayBlogById = (state: RootState, blogId: string) =>
+  state.blog.articles.find((article) => article._id === blogId);
 
-export const findBlogById = (state: RootState, blogId: string) =>
-  state.blog.article.find((blog) => blog._id === blogId);
-
-export const { setBlogId, setInputSearchValue } = blogSlice.actions;
-
+export const { setInputValueSearch } = blogSlice.actions;
 export default blogSlice.reducer;

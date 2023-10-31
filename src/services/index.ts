@@ -13,7 +13,7 @@ export const getAllUsers = () => {
   return axios.get(url);
 };
 
-export const createBlog = (blog: IArticle) => {
+export const createBlogs = (blog: IArticle) => {
   const url = `${SERVER_URL}/blog/create`;
-  return axios.post(url, blog);
+  return axios.post(url,blog);
 };
