@@ -51,8 +51,8 @@ const Blogs = () => {
                   </div>
 
                   <div className="px-5 text-COMMENT flex gap-3">
-                    <ShowAuthor authorId={blog.userId} />
-                    <ShowTime timeStamp={blog.date} />
+                    <ShowAuthor userId={blog.userId} />
+                    <ShowTime date={blog.date} />
                   </div>
                   <p>{blog.content.slice(0, 300)}...</p>
                   <div className="w-full"></div>

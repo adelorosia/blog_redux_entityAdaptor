@@ -1,11 +1,10 @@
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { IArticle } from "../interface";
 
-interface IShowTimeProps {
-  timeStamp: string;
-}
+type ShowTimeProps=Pick<IArticle,"date">
 
-const ShowTime = ({ timeStamp }: IShowTimeProps) => {
-  const oldTime = parseISO(timeStamp);
+const ShowTime = ({ date }: ShowTimeProps) => {
+  const oldTime = parseISO(date);
   const newFormatTime = formatDistanceToNow(oldTime);
   return <div>{newFormatTime} ago</div>;
 };

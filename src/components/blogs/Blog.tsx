@@ -31,8 +31,8 @@ const Blog = () => {
             <h3 className="text-2xl font-Viga text-RED">{blog?.title}</h3>
           </div>
           <div className="flex gap-2 px-8 text-COMMENT">
-            <ShowAuthor authorId={blog?.userId} />
-            <ShowTime timeStamp={blog?.date} />
+            <ShowAuthor userId={blog?.userId} />
+            <ShowTime date={blog?.date} />
           </div>
           <p>{blog?.content}</p>
           <div></div>
