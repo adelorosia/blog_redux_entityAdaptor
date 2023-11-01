@@ -1,39 +1,33 @@
 import { NavLink } from "react-router-dom";
 import SearchBox from "../SearchBox";
-import { useDispatch, useSelector } from "react-redux";
-import { displayAllBlogs, fetchBlog } from "../../reducer/BlogSlice";
-import ShowAuthor from "../ShowAuthor";
-import ShowTime from "../ShowTime";
-import { AppDispatch, RootState } from "../../store";
-import { useEffect } from "react";
+import {  useSelector } from "react-redux";
+import { displayAllBlogs } from "../../reducer/BlogSlice";
+import {  RootState } from "../../store";
 import Spinner from "../Spinner";
 import ErrorPage from "../../pages/ErrorPage";
+import ShowAuthor from "../ShowAuthor";
+import ShowTime from "../ShowTime";
+
 
 enum blogStatus {
   idle = "idle",
   loading = "loading",
-  completed = "completed",
+  complated = "complated",
   failed = "failed",
 }
+
 const Blogs = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    dispatch(fetchBlog());
-  }, [dispatch]);
-
   const blogs = useSelector(displayAllBlogs)
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
-
-  const search = useSelector((state: RootState) => state.blog.inputValueSearch);
-  const status = useSelector((state: RootState) => state.blog.status);
+  const status = useSelector((state: RootState) => state.blogs.status);
+  const search = useSelector((state: RootState) => state.blogs.searchInput);
 
   const renderedBlog = () => {
     switch (status) {
       case blogStatus.loading:
         return <Spinner />;
-      case blogStatus.completed:
+      case blogStatus.complated:
         return (
           <>
             {blogs
@@ -60,7 +54,7 @@ const Blogs = () => {
                     <ShowAuthor authorId={blog.userId} />
                     <ShowTime timeStamp={blog.date} />
                   </div>
-                  <p>{blog.content.slice(0, 200)}...</p>
+                  <p>{blog.content.slice(0, 300)}...</p>
                   <div className="w-full"></div>
                   <NavLink
                     to={`/blog/${blog._id}`}
@@ -76,7 +70,6 @@ const Blogs = () => {
         return <ErrorPage />;
     }
   };
-  
   return (
     <div className="container px-5 py-8 flex flex-col gap-8">
       <div className="flex justify-center">

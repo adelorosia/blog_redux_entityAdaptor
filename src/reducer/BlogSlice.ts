@@ -1,42 +1,59 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IArticle } from "../interface";
-import { createBlogs, getAllBlogs } from "../services";
+import { createBlog, deleteBlog, getAllBlogs, updateBlog } from "../services";
 import { RootState } from "../store";
 
 interface IBlogState {
-  articles: IArticle[];
-  status: "idle" | "loading" | "completed" | "failed";
-  error: null | string;
-  inputValueSearch: string;
-  blogId:string
+  article: IArticle[];
+  status: "idle" | "loading" | "complated" | "failed";
+  error: string | null;
+  searchInput: string;
+  blogId: string;
 }
+
 const initialState: IBlogState = {
-  articles: [],
+  article: [],
   status: "idle",
   error: null,
-  inputValueSearch: "",
-  blogId:""
+  searchInput: "",
+  blogId: "",
 };
 
-export const fetchBlog = createAsyncThunk("blog/fetchBlog", async () => {
+export const fetchBlogs = createAsyncThunk("/blogs/fetchBlogs", async () => {
   const response = await getAllBlogs();
   return response.data;
 });
 
 export const addNewBlog = createAsyncThunk(
-  "blog/addNewBlog",
+  "/blogs/addNewBlog",
   async (initialBlog: IArticle) => {
-    const response = await createBlogs(initialBlog);
+    const response = await createBlog(initialBlog);
     return response.data;
   }
 );
 
+export const updateApiBlog = createAsyncThunk(
+  "/blogs/updateApiBlog",
+  async (initialBlog: IArticle) => {
+    const response = await updateBlog(initialBlog, initialBlog._id);
+    return response.data;
+  }
+);
+
+export const deleteApiBlog = createAsyncThunk(
+  "/blogs/deleteApiBlog",
+  async (initialBlogId: string) => {
+    await deleteBlog(initialBlogId);
+    return initialBlogId;
+  }
+);
+
 const blogSlice = createSlice({
-  name: "blog",
+  name: "blogs",
   initialState,
   reducers: {
-    setInputValueSearch: (state, action) => {
-      state.inputValueSearch = action.payload;
+    setSearchInput: (state, action) => {
+      state.searchInput = action.payload;
     },
     setBlogId: (state, action) => {
       state.blogId = action.payload;
@@ -44,26 +61,40 @@ const blogSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchBlog.pending, (state) => {
+      .addCase(fetchBlogs.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchBlog.fulfilled, (state, action) => {
-        state.status = "completed";
-        state.articles = action.payload;
+      .addCase(fetchBlogs.fulfilled, (state, action) => {
+        state.status = "complated";
+        state.article = action.payload;
       })
-      .addCase(fetchBlog.rejected, (state, action) => {
+      .addCase(fetchBlogs.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "an error accourred";
       })
       .addCase(addNewBlog.fulfilled, (state, action) => {
-        (state.status = "completed"), state.articles.push(action.payload);
+        state.status = "complated";
+        state.article.push(action.payload);
+      })
+      .addCase(updateApiBlog.fulfilled, (state, action) => {
+        state.status = "complated";
+        const { id } = action.payload;
+        const index = state.article.findIndex((blog) => blog._id === id);
+        state.article[index] = action.payload;
+      })
+      .addCase(deleteApiBlog.fulfilled, (state, action) => {
+        state.status = "complated";
+        state.article = state.article.filter(
+          (blog) => blog._id !== action.payload
+        );
       });
   },
 });
 
-export const displayAllBlogs = (state: RootState) => state.blog.articles;
-export const displayBlogById = (state: RootState, blogId: string) =>
-  state.blog.articles.find((article) => article._id === blogId);
+export const displayAllBlogs = (state: RootState) => state.blogs.article;
 
-export const { setInputValueSearch,setBlogId } = blogSlice.actions;
+export const displayBlogById = (state: RootState, blogId: string) =>
+  state.blogs.article.find((blog) => blog._id === blogId);
+
+export const { setSearchInput, setBlogId } = blogSlice.actions;
 export default blogSlice.reducer;
