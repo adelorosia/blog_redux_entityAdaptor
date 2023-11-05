@@ -9,11 +9,9 @@ import { AppDispatch } from "../store";
 const HomePage = () => {
   const disptach = useDispatch<AppDispatch>();
   const { blogId } = useParams();
-
   useEffect(() => {
     disptach(fetchBlogs());
   }, [disptach]);
-
   useEffect(() => {
     disptach(setBlogId(blogId));
   }, [disptach, blogId]);

@@ -9,6 +9,7 @@ import ShowAuthor from "../ShowAuthor";
 import ShowTime from "../ShowTime";
 
 
+
 enum blogStatus {
   idle = "idle",
   loading = "loading",
@@ -17,6 +18,7 @@ enum blogStatus {
 }
 
 const Blogs = () => {
+
   const blogs = useSelector(displayAllBlogs)
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
