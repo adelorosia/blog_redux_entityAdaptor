@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { displayAllUsers } from "../reducer/UserSlice";
+import { displayAllUsers } from "../../reducer/UserSlice";
 import React, { useState } from "react";
-import { AppDispatch } from "../store";
+import { AppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";
-import { addNewBlog } from "../reducer/BlogSlice";
+import { addNewBlog } from "../../reducer/BlogSlice";
 
 const CreateBlogPage = () => {
   const navigate = useNavigate();

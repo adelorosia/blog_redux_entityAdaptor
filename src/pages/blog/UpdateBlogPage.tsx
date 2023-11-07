@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AppDispatch, RootState } from "../store";
-import { displayBlogById, updateApiBlog } from "../reducer/BlogSlice";
+import { AppDispatch, RootState } from "../../store";
+import { displayBlogById, updateApiBlog } from "../../reducer/BlogSlice";
 import { useState } from "react";
-import { displayAllUsers } from "../reducer/UserSlice";
+import { displayAllUsers } from "../../reducer/UserSlice";
 
 const UpdateBlogPage = () => {
   const navigate = useNavigate();

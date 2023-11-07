@@ -7,12 +7,14 @@ interface IUserState {
   author: IAuthor[];
   status: "idle" | "loading" | "complated" | "failed";
   error: string | null;
+  authorId: string;
 }
 
 const initialState: IUserState = {
   author: [],
   status: "idle",
   error: null,
+  authorId: "",
 };
 
 export const fetchUsers = createAsyncThunk("/users/fetchUsers", async () => {
@@ -47,7 +49,11 @@ export const deleteApiUser = createAsyncThunk(
 const userSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    setAuthorId: (state, action) => {
+      state.authorId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -85,4 +91,5 @@ export const displayAllUsers = (state: RootState) => state.users.author;
 export const displayUserById = (state: RootState, userId: string) =>
   state.users.author.find((author) => author._id === userId);
 
+export const { setAuthorId } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { IArticle, IAuthor } from "../interface";
 
-const SERVER_URL = "http://127.0.0.1:8001/api";
+const SERVER_URL = "http://localhost:8001/api";
 
 export const getAllBlogs = () => {
   const url = `${SERVER_URL}/blog/display`;
@@ -23,12 +23,12 @@ export const createUser = (author: IAuthor) => {
   return axios.post(url, author);
 };
 
-export const updateBlog = (blog: IArticle,blogId:string) => {
+export const updateBlog = (blog: IArticle, blogId: string) => {
   const url = `${SERVER_URL}/blog/update/${blogId}`;
   return axios.put(url, blog);
 };
 
-export const updateUser = (author: IAuthor,authorId:string) => {
+export const updateUser = (author: IAuthor, authorId: string) => {
   const url = `${SERVER_URL}/user/update/${authorId}`;
   return axios.put(url, author);
 };

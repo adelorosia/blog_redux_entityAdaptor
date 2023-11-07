@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 import { IArticle } from "../interface";
 import { createBlog, deleteBlog, getAllBlogs, updateBlog } from "../services";
 import { RootState } from "../store";
@@ -95,6 +99,14 @@ export const displayAllBlogs = (state: RootState) => state.blogs.article;
 
 export const displayBlogById = (state: RootState, blogId: string) =>
   state.blogs.article.find((blog) => blog._id === blogId);
+
+// export const displayAuthorsArticle = (state: RootState, authorId: string) =>
+// state.blogs.article.filter((blog) => blog.userId === authorId);
+
+export const displayAuthorBlog = createSelector(
+  [displayAllBlogs, (_, userId) => userId],
+  (articles, userId) => articles.filter((article) => article.userId === userId)
+);
 
 export const { setSearchInput, setBlogId } = blogSlice.actions;
 export default blogSlice.reducer;
