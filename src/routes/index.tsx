@@ -23,7 +23,7 @@ const router=createBrowserRouter([
         element:<HomePage />
       },
       {
-        path:'/blog/:blogId',
+        path:'/show_single_blog',
         element:<HomePage />
       },
       {
